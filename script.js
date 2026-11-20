@@ -1,0 +1,17 @@
+const toggle=document.querySelector('.menu-toggle'), nav=document.querySelector('.nav-links');
+if(toggle&&nav){toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'×':'☰'});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.textContent='☰'}))}
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const menuData={
+ coffee:{title:'Coffee & espresso',items:[['Espresso','A concentrated coffee classic.'],['Americano','Espresso softened with hot water.'],['Cappuccino','Espresso with steamed milk and a soft foam finish.'],['Latte','Espresso with silky steamed milk.'],['Nitro & cold brew','Smooth, chilled coffee favorites.'],['Coffee for home','Ask in-store about beans to brew at home.']]},
+ breakfast:{title:'Breakfast & pastries',items:[['Breakfast favorites','A simple start to your morning.'],['Fresh pastries','A sweet or flaky treat alongside your coffee.'],['Bakery selections','Ask in-store for the day’s assortment.']]},
+ tea:{title:'Tea & chai',items:[['Hot tea','A comforting cup, steeped to order.'],['Chai latte','Spiced tea with steamed milk.'],['Iced tea','A refreshing chilled option.']]},
+ lunch:{title:'Lunch',items:[['Fresh sandwiches','A satisfying midday bite.'],['Market snacks','Pair a snack with your favorite drink.'],['Seasonal options','Ask the team what’s fresh today.']]},
+ cold:{title:'Cold & blended',items:[['Smoothies','Fruit-forward blends for a refreshing pick-me-up.'],['Smoothie bowls','A spoonable take on a smoothie.'],['Organic juices','Fresh, vibrant juice options.'],['Frozen & blended','Cool treats and blended drinks.'],['Seasonal drinks','Limited-time sips throughout the year.']]},
+ treats:{title:'Sweet treats',items:[['Ice cream','A scoop (or two) for a little treat.'],['Milkshakes','A classic cold and creamy favorite.'],['Kombucha','A bubbly, fermented refreshment.']]}
+};
+const menuList=document.getElementById('menu-list');
+if(menuList){function renderMenu(key){const group=menuData[key];document.getElementById('menu-title').textContent=group.title;menuList.innerHTML=group.items.map(([name,desc])=>`<div class="menu-item"><strong>${name}</strong><p>${desc}</p></div>`).join('');document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.menu===key))}document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>renderMenu(b.dataset.menu)));renderMenu('coffee')}
+const lightbox=document.querySelector('.lightbox');
+if(lightbox){const image=lightbox.querySelector('img');document.querySelectorAll('[data-image]').forEach(btn=>btn.addEventListener('click',()=>{image.src=btn.dataset.image;lightbox.classList.add('open')}));const close=()=>lightbox.classList.remove('open');lightbox.querySelector('button').addEventListener('click',close);lightbox.addEventListener('click',e=>{if(e.target===lightbox)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()})}
+const form=document.getElementById('contact-form');if(form)form.addEventListener('submit',e=>{e.preventDefault();document.getElementById('form-notice').textContent='Thanks! This demo form is working locally, but no message has been sent.';form.reset()});
